@@ -5,7 +5,7 @@ const config = {
     authDomain: "instagram-clone-dc097.firebaseapp.com",
     databaseURL: "https://instagram-clone-dc097.firebaseio.com",
     projectId: "instagram-clone-dc097",
-    storageBucket: "",
+    storageBucket: "gs://instagram-clone-dc097.appspot.com",
     messagingSenderId: "87251556228"
   };
 
