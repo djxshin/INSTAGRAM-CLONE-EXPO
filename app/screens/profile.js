@@ -7,9 +7,11 @@ class profile extends React.Component {
     }
     render(){
         return(
-            <View>
-                <Text>Profile</Text>
-            </View>
+            <View style={{flex: 1}}>
+                <View style={{height:70, paddingTop: 30, backgroundColor: 'white',  borderColor: 'lightgrey', borderBottomWidth: 0.5, justifyContent: 'center', alignItems: 'center'}}>
+                     <Text>Profile</Text>
+                </View>    
+        </View>
         )
     }
 }
