@@ -1,7 +1,7 @@
 import React from 'react';
 import {TouchableOpacity, FlatList, StyleSheet, Text, View, Image} from 'react-native';
 import {f, auth, database, storage} from '../../config/config'
-
+ 
 class feed extends React.Component {
 constructor(props){
     super(props);
@@ -14,6 +14,42 @@ constructor(props){
 
 componentDidMount = () => {
     this.loadFeed();
+}
+
+pluralCheck = (s) => {
+    if(s == 1) {
+        return ' ago';
+    }else{
+        return 's ago'
+    }
+}
+
+timeConverter = (timestamp) => {
+    var a = new Date(timestamp * 1000);
+    var seconds = Math.floor((new Date() - a) / 1000);
+
+    var interval = Math.floor(seconds / 31536000);
+    if (interval > 1){
+        return interval + ' year'+ this.pluralCheck(interval); 
+    }
+    interval = Math.floor(seconds / 2592000);
+    if (interval > 1){
+        return interval + ' month' + this.pluralCheck(interval); 
+    }
+    interval = Math.floor(seconds / 86400);
+    if (interval > 1){
+        return interval + ' day' + this.pluralCheck(interval); 
+    }
+    interval = Math.floor(seconds / 3600);
+    if (interval > 1){
+        return interval + ' hour' + this.pluralCheck(interval); 
+    }
+   
+    interval = Math.floor(seconds / 60);
+    if (interval > 1){
+        return interval + ' minute' + this.pluralCheck(interval);   
+    }
+    return Math.floor(seconds ) + ' seconds' + this.pluralCheck(seconds); 
 }
 
 loadFeed = () => {
@@ -38,7 +74,7 @@ loadFeed = () => {
                     id: photo,
                     url: photoObj.url,
                     caption: photoObj.caption,
-                    posted: photoObj.posted,
+                    posted: that.timeConverter(photoObj.posted),
                     author: data.username,
                 });
                     that.setState({
@@ -60,8 +96,15 @@ render(){
         <View style={{flex: 1}}>
             <View style={{height:70, paddingTop: 30, backgroundColor: 'white',  borderColor: 'lightgrey', borderBottomWidth: 0.5, justifyContent: 'center', alignItems: 'center'}}>
                 <Text>Feed</Text>
-            </View>    
+            </View>  
 
+            { this.state.loading == true ? (
+            <View style={{flex:1, justifyContent: 'center', alignItems: 'center', }}>
+                <Text>
+                    Hol up! it's loading!!
+                </Text>
+            </View>
+        ): (
             <FlatList
                 refreshing={this.state.refresh}
                 onRefresh={this.loadNew}
@@ -71,24 +114,25 @@ render(){
                 renderItem={({item, index}) => (
                     <View key={index} style={{width:'100%', overflow: 'hidden', marginBottom: 5, justifyContent:'space-between', borderBottomWidth: 1, borderColor: 'grey'}}>
                     <View style={{padding:5, width:'100%', flexDirection: 'row', justifyContent: 'space-between'}}>
-                        <Text>Tim Ago</Text>
-                        <Text>@Rusty</Text>
+                        <Text>{item.posted}</Text>
+                        <Text>{item.author}</Text>
                     </View>
                     <View>
                         <Image
-                        source={{uri: 'https://source.unsplash.com/random/500x' + Math.floor((Math.random()*800) +500)}}
+                        source={{ uri: item.url }}
                         style={{resizeMode: 'cover', width: '100%', height: 275}}
                         />
                     </View>
         
                 
                     <View style={{padding:5}}>
-                        <Text>Caption text Here</Text>
+                        <Text>{item.caption}</Text>
                         <Text style={{color:'blue', marginTop:10, textAlign: 'center'}}>View Comments</Text>
                     </View>
                 </View> 
                 )}
             />
+        )}
         </View>
     )
 }
