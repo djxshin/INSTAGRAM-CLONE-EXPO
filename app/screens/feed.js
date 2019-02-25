@@ -75,7 +75,8 @@ loadFeed = () => {
                     url: photoObj.url,
                     caption: photoObj.caption,
                     posted: that.timeConverter(photoObj.posted),
-                    author: data
+                    author: data,
+                    authorId: photoObj.author
                 });
                     that.setState({
                         refresh: false,
@@ -115,7 +116,10 @@ render(){
                     <View key={index} style={{width:'100%', overflow: 'hidden', marginBottom: 5, justifyContent:'space-between', borderBottomWidth: 1, borderColor: 'grey'}}>
                     <View style={{padding:5, width:'100%', flexDirection: 'row', justifyContent: 'space-between'}}>
                         <Text>{item.posted}</Text>
-                        <Text>{item.author}</Text>
+                        <TouchableOpacity 
+                             onPress={()=> this.props.navigation.navigate('User', {userId: item.authorId})}>
+                            <Text>{item.author}</Text>
+                        </TouchableOpacity>
                     </View>
                     <View>
                         <Image
